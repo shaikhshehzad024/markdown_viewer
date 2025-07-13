@@ -27,7 +27,14 @@ def display_markdown_from_file(filename):
                 print(table)
                 continue
 
-            print(parse_line(line))
+            parsed_line = parse_line(line)
+            # Handle multi-line content (e.g., images)
+            if '\n' in parsed_line:
+                line_parts = parsed_line.split('\n')
+                for line_part in line_parts:
+                    print(line_part)
+            else:
+                print(parsed_line)
             i += 1
 
     except FileNotFoundError:

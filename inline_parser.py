@@ -1,4 +1,5 @@
 from .constants import *
+from .image_display import display_image
 
 def parse_inline(text):
     result = ""
@@ -39,6 +40,21 @@ def parse_inline(text):
                 i = end + 1
                 continue
 
+        # Handle images first: ![alt text](image_path)
+        if text[i:i+2] == "![":
+            end_text = text.find("]", i + 2)
+            if end_text != -1 and end_text + 1 < n and text[end_text + 1] == "(":
+                end_url = text.find(")", end_text + 2)
+                if end_url != -1:
+                    alt_text = text[i+2:end_text]
+                    image_path = text[end_text + 2:end_url]
+                    # Display image - this returns multi-line content
+                    image_display = display_image(alt_text, image_path)
+                    result += image_display
+                    i = end_url + 1
+                    continue
+        
+        # Handle regular links: [label](url)
         if text[i] == "[":
             end_text = text.find("]", i + 1)
             if end_text != -1 and end_text + 1 < n and text[end_text + 1] == "(":
