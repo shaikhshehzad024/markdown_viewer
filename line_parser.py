@@ -26,11 +26,9 @@ def parse_line(line):
     indent_str = "  " * level
 
     if any(stripped.startswith(f"{mark} [") for mark in ["-", "*"]):
-        # robustly find the closing bracket for the checkbox and allow spacing
-        close = stripped.find("]", 2)
-        checkbox = stripped[2:close+1].strip().lower() if close != -1 else ""
+        checkbox = stripped[2:6].lower()
         symbol = "☑" if checkbox == "[x]" else "☐"
-        content = parse_inline(stripped[close+1:].strip() if close != -1 else stripped[6:].strip())
+        content = parse_inline(stripped[6:].strip())
         return indent_str + LIST + symbol + " " + RESETCOLOR + content
 
     i = 0
